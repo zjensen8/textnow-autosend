@@ -24,4 +24,14 @@ jobs:
           TEXTNOW_MESSAGE: ${{secrets.TEXTNOW_MESSAGE}} # 获取并设置定义好的发送的信息内容环境变量值
           TEXTNOW_COOKIES: ${{secrets.TEXTNOW_COOKIES}}
         run: |
-          node index.js
+          if [ "${TEXTNOW_COOKIES}" == "" ]; then node index.js; exit 0; fi
+          main() {
+            set -e
+            let count=1
+            for i in "$@"; do
+              echo Start account: $count....
+              TEXTNOW_COOKIES="$i" node index.js;
+              let count+=1
+            done
+          }
+          eval main $(sed 's/^/"/g;s/$/"/g;s/|+|/" "/g'<<<${TEXTNOW_COOKIES})
