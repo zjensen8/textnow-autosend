@@ -16,7 +16,7 @@ jobs:
           node-version: "12.x" # 使用node 12版本作为运行环境
       - name: Install dependencies
         run: npm install # 安装依赖
-      - name: Run autosend
+      - name: Run autosend 
         env:
           TEXTNOW_USERNAME: ${{secrets.TEXTNOW_USERNAME}} # 获取并设置定义好的用户名环境变量值
           TEXTNOW_PASSWORD: ${{secrets.TEXTNOW_PASSWORD}} # 获取并设置定义好的用户密码环境变量值
