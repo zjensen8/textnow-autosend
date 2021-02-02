@@ -1,5 +1,5 @@
 name: "TextNow Autosend"
-on:
+on: 
   push: # 触发机制为push操作      
     branches: main 
   schedule: # 触发机制为定时任务
