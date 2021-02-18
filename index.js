@@ -5,6 +5,7 @@
   const puppeteer = require("puppeteer");
   const textNowHelper = require("./utils/helper");
   const config = require("./config");
+  const crypto = require('crypto');
   const {
     username,
     password,
@@ -15,6 +16,7 @@
 
   let browser = null;
   let page = null;
+  const md5 = crypto.createHash('md5').update(cookies_str).digest('hex');
 
   try {
     browser = await puppeteer.launch({ 
@@ -28,7 +30,7 @@
     try {
       console.log("Importing existing cookies...");
       const cookiesJSON = await fs.readFile(
-        path.resolve(__dirname, ".cahce/cookies.json")
+        path.resolve(__dirname, ".cache/" + md5 + "_cookies.json")
       );
       cookies = JSON.parse(cookiesJSON);
     } catch (error) {
@@ -51,7 +53,7 @@
       console.log("Successfully logged into TextNow!");
       // Save cookies to file
       await fs.writeFile(
-        path.resolve(__dirname, ".cache/cookies.json"),
+        path.resolve(__dirname, ".cache/" + md5 + "_cookies.json"),
         JSON.stringify(cookies)
       );
     } catch (error) {
