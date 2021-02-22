@@ -37,7 +37,7 @@ jobs:
             let count=1
             for i in "$@"; do
               echo Start account: $count....
-              TEXTNOW_COOKIES="$i" node index.js;
+              TEXTNOW_COOKIES="$i" node index.js || true;
               let count+=1
             done
           }
