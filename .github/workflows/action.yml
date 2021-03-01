@@ -3,7 +3,7 @@ on:
   push: # 触发机制为push操作      
     branches: main 
   schedule: # 触发机制为定时任务
-    - cron: "10 0 * * *" # 每天4点44分自动执行
+    - cron: "50 5 * * *" # 每天4点44分自动执行
 jobs: 
   autosend: 
     runs-on: ubuntu-latest # 运行环境为最新的Ubuntu
@@ -43,3 +43,25 @@ jobs:
           }
           eval main $(sed 's/^/"/g;s/$/"/g;s/|+|/" "/g'<<<${TEXTNOW_COOKIES})
           tar zcf ~/cache.tgz .cache
+      - name: log push  #获得自动部署的时间
+        run: | 
+          echo `date +"%Y-%m-%d %H:%M:%S"` begin > time.log
+      - name: Commit #上传到仓库
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff --quiet && git diff --staged --quiet || git commit -m "update new push" -a
+          echo ::set-output name=status::success
+      - name: Push changes
+        if: steps.commit.output.status != 'success'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
+
+
+
+
+
